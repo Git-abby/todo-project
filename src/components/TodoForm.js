@@ -15,14 +15,14 @@ function TodoForm({addTodo}) {
     }
   }
   return (
-    <form onSubmit={handleSubmit} className="w-[500px] relative">
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative px-4 sm:px-6">
       <div className="relative">
 
       <input
         type="text" 
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full p-4 rounded-full bg-slate-800 focus:outline-none"
+        className="w-full p-4 rounded-full bg-slate-800 focus:outline-none placeholder:text-gray-400 focus:text-gray-200"
 
         placeholder="Add today's task here"
       />
