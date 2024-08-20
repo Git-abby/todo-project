@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TodoForm from "./TodoForm";
 import TodoList from "./TodoList";
 import { v4 as uuidv4 } from "uuid";
@@ -9,7 +9,25 @@ import Heading from "./Heading";
 function TodoWrapper() {
   const [todos, setTodos] = useState([]);
 
-  console.log(todos.length);
+
+  //Fetch todos from localstorage when compo mounts
+  useEffect(() => {
+    const fetchedTodos = JSON.parse(localStorage.getItem('todos'));
+
+    if(fetchedTodos){
+      console.log("from local", fetchedTodos)
+      setTodos(fetchedTodos);
+    }
+  }, [])
+  
+  //Store Todos to localstorage whenever the todos state changes
+  useEffect(() => {
+    console.log("to local", todos)
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
+
+  // console.log(todos.length);
 
   const addTodo = (todo) => {
     setTodos([
@@ -46,22 +64,23 @@ function TodoWrapper() {
         return todo.id !== id;
       })
     );
-    console.log(todos);
+    // console.log(todos);
   };
   //   console.log(todos);
   return (
-    <div className="mt-8 p-2 flex flex-col justify-center items-center gap-y-6 max-w-lg relative w-full">
+    <div className="mt-8 p-4 flex flex-col justify-center items-center gap-y-6 max-w-lg mx-auto w-full">
       <Heading />
       <TodoForm addTodo={addTodo} />
 
       {/* Rendering All todos */}
-
       {todos.length === 0 ? (
-        <div className="flex items-center justify-center h-full">
-          <p className="text-gray-400 text-2xl">No todos available</p>
+        <div className="flex items-center justify-center w-full">
+          <p className="text-gray-400 text-lg sm:text-2xl">
+            No todos available
+          </p>
         </div>
       ) : (
-        <div className="relative w-full bg-slate-800 text-white rounded-xl flex flex-col items-start justify-start max-h-96 overflow-y-auto custome-scroll">
+        <div className="relative w-full bg-slate-800 text-white rounded-xl flex flex-col items-start justify-start max-h-[60vh] sm:max-h-96 overflow-y-auto custom-scroll">
           {todos &&
             todos.map((todo) => {
               return todo.isEditing ? (
@@ -75,7 +94,6 @@ function TodoWrapper() {
                   toggleEditable={toggleEditable}
                 />
               );
-              //console.log(todo.task);
             })}
         </div>
       )}
